@@ -1,10 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>addEmailAccount</title>
 </head>
 <body>
-$END$
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+//点提交后,即可用Foxmail、网易邮箱大师等客户端进行邮件收发测试 POP 995 smtp 1025
+    <table class="auto-style1">
+        <tr>
+            <td>邮箱账号：</td>
+            <td>
+                <input type="text" name="name" id="email"/></td>
+        </tr>
+        <tr>
+            <td>密码：</td>
+            <td>
+                <input type="text" name="pwd" id="password"/></td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="添加用户" onclick="addUser()"/></td>
+        </tr>
+    </table>
+
+<script>
+    var addUser = function(){
+      var url = 'addEmail';
+      var param = {};
+      param.email= $('#email').val();
+      param.password = $('#password').val()+'';
+      alert(param.password+'===='+ typeof param.password );
+      $.ajax({
+
+        url: url,
+
+        type: 'POST',
+
+        data: JSON.stringify(param) ,
+
+        contentType: 'application/json; charset=utf-8',
+
+        success: function (response) {
+
+        alert(response.status);
+
+        },
+
+        error: function () {
+
+        alert("error");
+
+        }
+
+        });
+        return false;
+    }
+
+</script>
 </body>
 </html>
