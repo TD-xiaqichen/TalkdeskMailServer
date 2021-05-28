@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -10,11 +11,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="dataMime" target="11" />
+      <module name="mimeformat" target="11" />
       <module name="xqichenmailserver" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="dataMime" options="-parameters" />
+      <module name="mimeformat" options="-parameters" />
       <module name="xqichenmailserver" options="-parameters" />
     </option>
   </component>

@@ -74,10 +74,15 @@ public final class MailListener extends Wiser {
 		saver.updateLastUidInMailbox(stringLongMap.get("mailboxId"),stringLongMap.get("mailUid"));
 		boolean existMailbox = saver.isExistMailbox(recipient, "INBOX");
 		if(existMailbox==false){
-			saver.createMailbox(recipient,"INBOX");
+			if(recipient.contains("@163.com")){
+               	//todo 发163邮箱
+             new TrytoHost(recipient,s,from);
+			}else{
+				saver.createMailbox(recipient,"INBOX");
+				Map<String, Long> inbox = saver.saveEmailIntoMailbox(recipient, "INBOX", s);
+				saver.updateLastUidInMailbox(inbox.get("mailboxId"),inbox.get("mailUid"));
+			}
 		}
-		Map<String, Long> inbox = saver.saveEmailIntoMailbox(recipient, "INBOX", s);
-		saver.updateLastUidInMailbox(inbox.get("mailboxId"),inbox.get("mailUid"));
 	}
 
 	private MailMessage convertString(String orignContent, Long mailUid, Long mailboxId) throws MessagingException, IOException {

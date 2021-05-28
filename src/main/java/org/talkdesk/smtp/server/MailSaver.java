@@ -37,6 +37,7 @@ public final class MailSaver extends Observable {
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyhhmmssSSS");
 
+
 	/**
 	 * Saves incoming email in file system and notifies observers.
 	 *

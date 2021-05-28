@@ -12,17 +12,31 @@ import java.net.UnknownHostException;
 
 public class StartSMTPServer {
 
-     public static final String KEYOFSMTPPORT = "smtp_port";
-     public static final String HOST ="host";
+     private int port;
+     private String hostStr;
+
+    public StartSMTPServer(int port,String hostStr){
+        this.port = port;
+        this.hostStr = hostStr;
+        try {
+            InetAddress inetAddress = InetAddress.getByName(hostStr);
+            SMTPServerHandler.INSTANCE.startServer(port, inetAddress);
+        } catch (BindPortException e) {
+            e.printStackTrace();
+        } catch (OutOfRangePortException e) {
+            e.printStackTrace();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     public StartSMTPServer(){
         PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
         propertiesConfiguration.setDelimiterParsingDisabled(true);
-        propertiesConfiguration.setFileName(ContainerBeans.CONFIGPATH);
         try {
-            propertiesConfiguration.load();
-            int port = propertiesConfiguration.getInt(KEYOFSMTPPORT);
-            String hostStr = propertiesConfiguration.getString(HOST);
+         //  propertiesConfiguration.load();
+            int port = 1025;
+            String hostStr = propertiesConfiguration.getString("127.0.0.1");
             InetAddress inetAddress = InetAddress.getByName(hostStr);
             SMTPServerHandler.INSTANCE.startServer(port, inetAddress);
         } catch (UnknownHostException e) {
@@ -30,8 +44,6 @@ public class StartSMTPServer {
         } catch (OutOfRangePortException e) {
             e.printStackTrace();
         } catch (BindPortException e) {
-            e.printStackTrace();
-        } catch (ConfigurationException e) {
             e.printStackTrace();
         }
 

@@ -8,37 +8,52 @@ import java.sql.*;
 
 public class JDBCUtils {
 
-    private static String KEYOFURL = "db_url";
-    private static String KEYOFUSER = "db_user";
-    private static String KEYOFPASSWORD = "db_password";
-    private static String KEYOFDRIVER = "db_driver";
-
     private static String url = null;
     private static String user = null;
     private static String password = null;
     private static String driver = null;
 
+    private static String CONFPATH = "config.properties";
+
+    public JDBCUtils(){
+
+    }
+
+//    public JDBCUtils(String url,String driver,String user,String password){
+//        this.url=url;
+//        this.driver=driver;
+//        this.user=user;
+//        this.password=password;
+//        try {
+//            Class.forName(driver);
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
     static {
         PropertiesConfiguration propertiesConfiguration = new PropertiesConfiguration();
         propertiesConfiguration.setDelimiterParsingDisabled(true);
-        propertiesConfiguration.setFileName(ContainerBeans.CONFIGPATH);
+        propertiesConfiguration.setFileName(CONFPATH);
         try {
             propertiesConfiguration.load();
-            url = propertiesConfiguration.getString(KEYOFURL);
-            user = propertiesConfiguration.getString(KEYOFUSER);
-            password = propertiesConfiguration.getString(KEYOFPASSWORD);
-            driver = propertiesConfiguration.getString(KEYOFDRIVER);
+      //      url = "jdbc:postgresql://127.0.0.1:5432/talkdesk";
+            url=propertiesConfiguration.getString("db_url");
+        //    user = "postgres";
+            user = propertiesConfiguration.getString("db_user");
+        //    password = "Aa12345678";
+            password = propertiesConfiguration.getString("db_password");
+          //  driver = "org.postgresql.Driver";
+            driver = propertiesConfiguration.getString("db_driver");
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (ConfigurationException e) {
             e.printStackTrace();
         }
-
-
     }
 
-    public static Connection getConnection() throws SQLException {
+    public  static Connection getConnection() throws SQLException {
         Connection conn = DriverManager.getConnection(url, user, password);
         return conn;
     }
