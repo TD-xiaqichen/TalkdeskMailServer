@@ -10,7 +10,7 @@ import java.util.*;
 public class HostAddress {
 
     public static void main(String[] args) throws UnknownHostException, TextParseException {
-        Lookup lookup =new Lookup("qq.com",Type.MX);
+        Lookup lookup =new Lookup("gmail.com",Type.MX);
         Record[] run = lookup.run();
         List<String> mxRecordsRaw = findMXRecordsRaw(run);
         InetAddress inetAddress = InetAddress.getByName(mxRecordsRaw.get(0));

@@ -5,6 +5,8 @@ import org.apache.james.server.core.MailHeaders;
 import org.subethamail.wiser.Wiser;
 import org.talkdesk.database.JDBCUtils;
 import org.talkdesk.smtp.pojo.MailMessage;
+import org.talkdesk.smtp.server.sent.TrytoHostGMail;
+import org.talkdesk.util.DNSUtils;
 
 import javax.mail.Header;
 import javax.mail.MessagingException;
@@ -17,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -77,7 +80,11 @@ public final class MailListener extends Wiser {
 			if(recipient.contains("@163.com")){
                	//todo 发163邮箱
              new TrytoHost(recipient,s,from);
-			}else{
+			} else if(recipient.contains("@gmail.com")||recipient.contains("@outlook.com")){
+				List<String> smtpTargetByEmail = DNSUtils.getSMTPTargetByEmail(recipient);
+				new TrytoHostGMail(recipient,s,from,smtpTargetByEmail);
+			}
+			else{
 				saver.createMailbox(recipient,"INBOX");
 				Map<String, Long> inbox = saver.saveEmailIntoMailbox(recipient, "INBOX", s);
 				saver.updateLastUidInMailbox(inbox.get("mailboxId"),inbox.get("mailUid"));

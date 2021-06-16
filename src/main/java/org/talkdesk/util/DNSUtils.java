@@ -8,6 +8,20 @@ import java.util.*;
 
 public class DNSUtils {
 
+    public static List<String> getSMTPTargetByEmail(String email) throws TextParseException, UnknownHostException {
+        List<String> targetHosts = new ArrayList<>();
+        String domain = email.substring(email.indexOf("@")+1);
+        Lookup lookup =new Lookup(domain, Type.MX);
+        Record[] run = lookup.run();
+        List<String> mxRecordsRaw = findMXRecordsRaw(run);
+        for(String m:mxRecordsRaw){
+            InetAddress inetAddress = InetAddress.getByName(m);
+            String hostAddress = inetAddress.getHostAddress();
+            targetHosts.add(hostAddress);
+        }
+        return targetHosts;
+    }
+
     public static String getSMTPAddressByRecipient(String recipient) throws TextParseException, UnknownHostException {
         String domain = recipient.substring(recipient.indexOf("@")+1);
         Lookup lookup =new Lookup(domain, Type.MX);
