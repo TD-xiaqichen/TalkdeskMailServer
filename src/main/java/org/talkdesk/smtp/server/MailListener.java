@@ -18,10 +18,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.*;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.sql.Date;
+import java.util.*;
 
 /**
  * Listens to incoming emails and redirects them to the {@code MailSaver} object.
@@ -77,9 +75,11 @@ public final class MailListener extends Wiser {
 		saver.updateLastUidInMailbox(stringLongMap.get("mailboxId"),stringLongMap.get("mailUid"));
 		boolean existMailbox = saver.isExistMailbox(recipient, "INBOX");
 		if(existMailbox==false){
-			if(recipient.contains("@163.com")){
+			if(recipient.contains("@163.com") || recipient.toLowerCase().contains("@qq.com")){
                	//todo 发163邮箱
-             new TrytoHost(recipient,s,from);
+           //  new TrytoHost(recipient,s,from);
+				List<String> smtpTargetByEmail = DNSUtils.getSMTPTargetByEmail(recipient);
+				new TrytoHostGMail(recipient,s,from,smtpTargetByEmail);
 			} else if(recipient.contains("@gmail.com")||recipient.contains("@outlook.com")){
 				List<String> smtpTargetByEmail = DNSUtils.getSMTPTargetByEmail(recipient);
 				new TrytoHostGMail(recipient,s,from,smtpTargetByEmail);
