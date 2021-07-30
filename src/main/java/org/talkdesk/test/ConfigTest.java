@@ -1,8 +1,11 @@
 package org.talkdesk.test;
 
+import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.mail.util.MimeMessageParser;
+import org.junit.Test;
 
 import javax.activation.DataSource;
 import javax.mail.Session;
@@ -11,28 +14,39 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ConfigTest {
 
     public static void main(String[] args) throws ConfigurationException {
-        testTwo();
+        testThree();
     }
 
-
+    @Test
     public static void testThree(){
         InputStream in = null;
         try{
-            File attach = new File("/Users/xiaqichen/Public/testTian.eml");
+            File attach = new File("/Users/xiaqichen/Public/fujian.eml");
             in = new FileInputStream(attach);
             MimeMessage message = new MimeMessage(Session.getDefaultInstance(new Properties()),in);
             MimeMessageParser parser = new MimeMessageParser(message);
             parser.parse();
             List<DataSource> attachmentList = parser.getAttachmentList();
+            MimeAttach mimeAttach = new MimeAttach();
+            mimeAttach.setOrdinaryAttach(attachmentList);
 
+            Collection<String> contentIds = parser.getContentIds();
+            List<Map<String, DataSource>> mapList = contentIds.stream().map(a -> {
+                Map<String, DataSource> map = new HashMap();
+                DataSource dataSource = parser.findAttachmentByCid(a);
+                map.put(a, dataSource);
+                return map;
+            }).collect(Collectors.toList());
+            System.out.println(mapList);
         }catch (Exception e){
-
+           e.printStackTrace();
         }finally {
             try {
               if(in !=null) in.close();
